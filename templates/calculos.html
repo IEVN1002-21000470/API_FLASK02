@@ -6,8 +6,6 @@
 <form action="" method="post">
 
   {{ datos_macro.datos('numero1','ingrese el numero 1') }}
-  {{ datos_macro.datos('numero3','Numero3','password') }}
-
   {{ datos_macro.datos('numero2','ingrese el numero 2') }}
 
   <div class="mb-3">
@@ -21,5 +19,7 @@
   </div>
   <button type="submit" class="btn btn-primary">Calcular</button>
 </form>
+
+<h1>la operacion es: {{numero1}} y {{numero2}} = {{res}}</h1>
 
 {%endblock%}
