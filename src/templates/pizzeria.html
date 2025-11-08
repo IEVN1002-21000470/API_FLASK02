@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% import "_macros2.html" as macro %}
+{% block container %}
+
+<div class="container mx-auto p-6">
+  <h2 class="text-center text-2xl font-bold mb-4">Pizzería - Pedidos</h2>
+
+  <form action="/pizzeria" method="post" novalidate>
+    <div class="border-2 border-gray-400 rounded p-4 mb-6">
+      <!-- Fila 1: Datos del cliente -->
+      <div class="grid grid-cols-4 gap-3 mb-4">
+        <div>
+          <label class="block mb-1 font-semibold">Nombre:</label>
+          {{form.nombre_cliente(class="border border-gray-300 rounded px-2 py-1 w-full")}}
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold">Dirección:</label>
+          {{form.direccion(class="border border-gray-300 rounded px-2 py-1 w-full")}}
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold">Teléfono:</label>
+          {{form.telefono(class="border border-gray-300 rounded px-2 py-1 w-full")}}
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold">Fecha:</label>
+          {{form.fecha(class="border border-gray-300 rounded px-2 py-1 w-full", placeholder="dd-mm-aaaa")}}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-3">
+          <h5 class="font-bold mb-2">Tamaño</h5>
+          <div class="space-y-1">
+            <div>
+              <input type="radio" name="tamano" value="chica" id="chica" class="mr-1">
+              <label for="chica">Chica $40</label>
+            </div>
+            <div>
+              <input type="radio" name="tamano" value="mediana" id="mediana" class="mr-1">
+              <label for="mediana">Mediana $80</label>
+            </div>
+            <div>
+              <input type="radio" name="tamano" value="grande" id="grande" class="mr-1">
+              <label for="grande">Grande $120</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-3">
+          <h5 class="font-bold mb-2">Ingredientes</h5>
+          <div class="space-y-1">
+            <div>
+              <input type="checkbox" name="ingredientes" value="jamon" id="jamon" class="mr-1">
+              <label for="jamon">Jamón $10</label>
+            </div>
+            <div>
+              <input type="checkbox" name="ingredientes" value="pina" id="pina" class="mr-1">
+              <label for="pina">Piña $10</label>
+            </div>
+            <div>
+              <input type="checkbox" name="ingredientes" value="champinones" id="champinones" class="mr-1">
+              <label for="champinones">Champiñones $10</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-3">
+          <h5 class="font-bold mb-2">Cantidad</h5>
+          {{form.numero_pizzas(class="border border-gray-300 rounded px-2 py-1 w-full mb-2")}}
+          <button type="submit" name="btnAgregar" value="agregar" class="bg-green-500 text-white px-4 py-2 rounded w-full hover:bg-green-600">
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <h5 class="font-bold mb-2">Pedidos</h5>
+        <table class="w-full border-collapse border border-gray-400">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="border border-gray-400 px-2 py-1">Tamaño</th>
+              <th class="border border-gray-400 px-2 py-1">Ingredientes</th>
+              <th class="border border-gray-400 px-2 py-1">Cantidad</th>
+              <th class="border border-gray-400 px-2 py-1">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if pedidos %}
+              {% for pedido in pedidos %}
+              <tr>
+                <td class="border border-gray-400 px-2 py-1">{{pedido.tamano}}</td>
+                <td class="border border-gray-400 px-2 py-1">{{pedido.ingredientes}}</td>
+                <td class="border border-gray-400 px-2 py-1 text-center">{{pedido.numero_pizzas}}</td>
+                <td class="border border-gray-400 px-2 py-1 text-right">${{pedido.subtotal}}</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" class="border border-gray-400 px-2 py-1 text-center">Sin pedidos</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+        <div class="mt-3 flex gap-2">
+          <button type="submit" name="btnQuitar" value="quitar" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            Quitar
+          </button>
+          <button type="submit" name="btnTerminar" value="terminar" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+            Terminar
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h5 class="font-bold mb-2">Ventas del Día</h5>
+        <div class="border border-gray-400 rounded p-4 bg-gray-100" style="min-height: 200px;">
+          {% if mensaje %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded mb-2">{{mensaje}}</div>
+          {% endif %}
+
+          {% if ventas_totales %}
+            {% for venta in ventas_totales %}
+              <p class="mb-1"><strong>{{venta.nombre}}</strong> - ${{venta.total}}</p>
+            {% endfor %}
+            <hr class="my-3 border-gray-400">
+            <h6 class="font-bold text-lg">Total: ${{ventas_totales|sum(attribute='total')}}</h6>
+          {% else %}
+            <p class="text-gray-500 text-center mt-20">No hay ventas</p>
+          {% endif %}
+        </div>
+        <button type="submit" name="btnVentasDia" value="ventas_dia" class="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2 hover:bg-blue-600">
+          Ver Ventas
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

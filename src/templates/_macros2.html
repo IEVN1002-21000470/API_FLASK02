@@ -1,0 +1,40 @@
+{%macro campoTexto(field)%}
+<div>
+  {{field(class="border border-gray-400 rounded px-2 py-1 w-full text-sm") | safe }}
+  {%if field.errors%}
+    {%for error in field.errors%}
+    <small class="text-red-600">{{error}}</small>
+    {% endfor %}
+  {%endif%}
+</div>
+{%endmacro%}
+
+{%macro radioTamano()%}
+<div>
+  <input type="radio" name="tamano" id="chica" value="chica" class="mr-2">
+  <label for="chica">Chica $40</label>
+</div>
+<div>
+  <input type="radio" name="tamano" id="mediana" value="mediana" class="mr-2">
+  <label for="mediana">Mediana $80</label>
+</div>
+<div>
+  <input type="radio" name="tamano" id="grande" value="grande" class="mr-2">
+  <label for="grande">Grande $120</label>
+</div>
+{%endmacro%}
+
+{%macro checkIngredientes()%}
+<div>
+  <input type="checkbox" name="ingredientes" value="jamon" id="jamon" class="mr-2">
+  <label for="jamon">Jamón $10</label>
+</div>
+<div>
+  <input type="checkbox" name="ingredientes" value="pina" id="pina" class="mr-2">
+  <label for="pina">Piña $10</label>
+</div>
+<div>
+  <input type="checkbox" name="ingredientes" value="champinones" id="champinones" class="mr-2">
+  <label for="champinones">Champiñones $10</label>
+</div>
+{%endmacro%}
